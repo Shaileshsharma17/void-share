@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoidShare</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Void<span>Share</span></h1>
+    <nav>
+        <a href="/">Home</a>
+        {% if current_user.is_authenticated %}
+            <a href="/files">Files</a>
+            {% if current_user.role == 'admin' %}
+                <a href="/report">Report</a>
+            {% endif %}
+            <a href="/logout">Logout ({{ current_user.username }})</a>
+        {% else %}
+            <a href="/login">User Login</a>
+            <a href="/admin-login">Admin Login</a>
+            <a href="/signup">Sign Up</a>
+        {% endif %}
+    </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+    <h2>Upload. Expire. Forget.</h2>
+    <p>Upload a file, choose an expiry time, and share one simple link.</p>
+</div>
+
+<div class="container">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- UPLOAD SECTION -->
+    {% if current_user.is_authenticated %}
+    <div class="card">
+        <h2>Upload a file</h2>
+
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <label>Choose a file</label>
+            <input type="file" name="file" required>
+
+            <label>Keep it available for</label>
+            <select name="expiry">
+                <option value="1">1 Hour</option>
+                <option value="24">1 Day</option>
+                <option value="168">1 Week</option>
+                <option value="8760">1 Year</option>
+            </select>
+
+            <button type="submit">Upload file</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="card">
+        <h2>📤 Upload File</h2>
+        <p>Please <a href="/login">login</a> to upload files.</p>
+    </div>
+    {% endif %}
+
+    <!-- FILE LIST SECTION -->
+    {% if current_user.is_authenticated %}
+    <div class="card">
+        <h2>Your recent files</h2>
+
+        <table>
+            <tr>
+                <th>File Name</th>
+                <th>Upload Time</th>
+                <th>Expiry Time</th>
+                <th>Share Link</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for file in files %}
+            <tr>
+                <td>{{ file.filename }}</td>
+                <td>{{ file.upload_time }}</td>
+                <td>{{ file.expiry_time }}</td>
+                <td>
+                    <a href="{{ file.share_link if file.share_link is defined else url_for('share', unique_id=file.id) }}" target="_blank">Preview &amp; share</a>
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_file', unique_id=file.id) }}" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% else %}
+    <div class="card">
+        <h2>📁 Files</h2>
+        <p>Please <a href="/login">login</a> to view files.</p>
+    </div>
+    {% endif %}
+
+    <!-- DETAILS SECTION -->
+    <div class="card">
+        <h2>How it works</h2>
+        <div class="details">
+            <p><b>1.</b> Choose a file to upload.</p>
+            <p><b>2.</b> Select how long it should stay available.</p>
+            <p><b>3.</b> Share the generated link.</p>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Void Share | Mini Project
+</footer>
+
+</body>
+</html>

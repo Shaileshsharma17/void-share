@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Files - Void Share</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Void<span>Share</span></h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/files">Files</a>
+        {% if current_user.role == 'admin' %}
+            <a href="/report">Report</a>
+        {% endif %}
+        <a href="/logout">Logout ({{ current_user.username }})</a>
+    </nav>
+</header>
+
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <h2>Your files</h2>
+        <table>
+            <tr>
+                <th>File</th>
+                <th>Upload</th>
+                <th>Expiry</th>
+                <th>Share</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for file in files %}
+            <tr>
+                <td>{{ file.filename }}</td>
+                <td>{{ file.upload_time }}</td>
+                <td>{{ file.expiry_time }}</td>
+                <td><a href="{{ url_for('share', unique_id=file.id) }}" target="_blank">Preview &amp; share</a></td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_file', unique_id=file.id) }}" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<footer>
+    © 2026 Void Share | Mini Project
+</footer>
+
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\lodu shailesh\OneDrive\Desktop\VoidShare\templates\files.html

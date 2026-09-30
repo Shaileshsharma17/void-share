@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report - Void Share</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Void<span>Share</span></h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/files">Files</a>
+        <a href="/report">Report</a>
+        <a href="/logout">Logout ({{ current_user.username }})</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Admin report</h2>
+        <table>
+            <tr>
+                <th>File</th>
+                <th>Uploaded by</th>
+                <th>Upload</th>
+                <th>Expiry</th>
+                <th>Preview</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for file in files %}
+            <tr>
+                <td>{{ file.filename }}</td>
+                <td>{{ file.owner }}</td>
+                <td>{{ file.upload_time }}</td>
+                <td>{{ file.expiry_time }}</td>
+                <td><a href="{{ url_for('share', unique_id=file.id) }}" target="_blank" rel="noopener">Preview</a></td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_file', unique_id=file.id) }}" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<footer>
+    © 2026 Void Share | Mini Project
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ file.filename }} - Void Share</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+    <h1>Void<span>Share</span></h1>
+    {% if current_user.is_authenticated %}
+    <nav>
+        <a href="/">Home</a>
+        <a href="/files">Files</a>
+        {% if current_user.role == 'admin' %}
+            <a href="/report">Report</a>
+        {% endif %}
+        <a href="/logout">Logout ({{ current_user.username }})</a>
+    </nav>
+    {% endif %}
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>A file has been shared with you</h2>
+        <div class="metadata">
+            <div><span>File name</span><strong>{{ file.filename }}</strong></div>
+            <div><span>Uploaded</span><strong>{{ file.upload_time }}</strong></div>
+            <div><span>Expires</span><strong>{{ file.expiry_time }}</strong></div>
+        </div>
+        {% if preview_type == 'image' %}
+            <img class="file-preview image-preview" src="{{ url_for('preview', unique_id=file.id) }}" alt="Preview of {{ file.filename }}">
+        {% elif preview_type == 'video' %}
+            <video class="file-preview" controls><source src="{{ url_for('preview', unique_id=file.id) }}">Your browser cannot preview this video.</video>
+        {% elif preview_type == 'audio' %}
+            <audio class="audio-preview" controls><source src="{{ url_for('preview', unique_id=file.id) }}">Your browser cannot preview this audio file.</audio>
+        {% elif preview_type == 'pdf' or preview_type == 'text' %}
+            <iframe class="file-preview document-preview" src="{{ url_for('preview', unique_id=file.id) }}" title="Preview of {{ file.filename }}"></iframe>
+        {% else %}
+            <p class="empty-state">A preview is not available for this file type. You can still download it.</p>
+        {% endif %}
+        <a href="/download/{{ file.id }}" class="btn">Download File</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up - Void Share</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Void<span>Share</span></h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/login">User Login</a>
+        <a href="/admin-login">Admin Login</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Create an account</h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" required>
+
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+</div>
+
+<footer>
+    © 2026 Void Share | Mini Project
+</footer>
+
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\lodu shailesh\OneDrive\Desktop\VoidShare\templates\signup.html
